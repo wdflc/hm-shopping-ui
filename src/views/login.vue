@@ -40,7 +40,7 @@ export default {
   methods: {
     async getPicCode () {
       const { data: { base64, key } } = await
-      request.get('/captcha.image')
+      request.get('/captcha/image')
       this.picUrl = base64
       this.picKey = key
     }

@@ -2,12 +2,12 @@
   <div>
     <!-- 二级路由的出口   -->
     <router-view></router-view>
-    <van-tabber active-color = "#ee0a24" inactive-color="#000">
-      <van-tabber-item icon = "wap-home-o">首页</van-tabber-item>
-      <van-tabber-item icon = "apps-o">分类页</van-tabber-item>
-      <van-tabber-item icon = "shopping-cart-o">购物车</van-tabber-item>
+    <van-tabbar active-color = "#ee0a24" inactive-color="#000">
+      <van-tabbar-item icon = "wap-home-o">首页</van-tabbar-item>
+      <van-tabbar-item icon = "apps-o">分类页</van-tabbar-item>
+      <van-tabbar-item icon = "shopping-cart-o">购物车</van-tabbar-item>
       <van-tabbar-item icon="user-o">我的</van-tabbar-item>
-    </van-tabber>
+    </van-tabbar>
   </div>
 </template>
 
