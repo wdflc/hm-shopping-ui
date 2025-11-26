@@ -8,24 +8,27 @@
             </div>
             <div class="form">
                 <div class="form-item">
-                    <input class="inp" maxlength="11" placeholder="请输入手机号码" type="text">
+                    <input v-model="mobile" class="inp" maxlength="11" placeholder="请输入手机号码" type="text">
                 </div>
                 <div class="form-item">
-                    <input class="inp" maxlength="5" placeholder="请输入图形验证码" type="text">
+                    <input v-model="picCode" class="inp" maxlength="5" placeholder="请输入图形验证码" type="text">
                     <img v-if="picUrl" :src="picUrl" @click="getPicCode">
                 </div>
                 <div class="form-item">
-                    <input class="inp" placeholder="请输入短信验证码">
-                    <button>获取验证码</button>
+                    <input v-model="msgCode" class="inp" placeholder="请输入短信验证码">
+                    <button @click="getCode">
+                      {{second === totalSecond ? '获取验证码' : second + '秒后重新发送'}}
+                      </button>
                 </div>
             </div>
-          <button class="login-btn">登陆</button>
+          <button class="login-btn" @click="login">登陆</button>
         </div>
     </div>
 </template>
 
 <script>
 import request from '@/utils/request'
+import { codeLogin, getMsgCode } from '@/api/login'
 export default {
   name: 'LoginPage',
   async created () {
@@ -33,6 +36,12 @@ export default {
   },
   data () {
     return {
+      totalSecond: 60,
+      second: 60,
+      timer: null,
+      mobile: '', // 手机号
+      picCode: '', // 图形验证码
+      msgCode: '',
       picUrl: '',
       picKey: ''
     }
@@ -43,8 +52,53 @@ export default {
       request.get('/captcha/image')
       this.picUrl = base64
       this.picKey = key
+    },
+    async login () {
+      if (!this.validFn()) {
+        return
+      }
+      const cleanCode = this.msgCode.trim()// trim() 去除前后半角/全角空格、换行、制表符
+      console.log(cleanCode)
+      if (!/^\d{6}$/.test(cleanCode)) {
+        this.$toast('请输入正确的手机验证码')
+        return
+      }
+      await codeLogin(this.mobile, this.msgCode)
+      this.$router.push('/')
+      this.$toast('登录成功')
+    },
+    validFn () {
+      if (!/^1[3-9]\d{9}$/.test(this.mobile)) {
+        this.$toast('请输入正确的手机号')
+        return false
+      }
+      if (!/^\w{4}$/.test(this.picCode)) {
+        this.$toast('请输入正确的图形验证码')
+        return false
+      }
+      return true
+    },
+    async getCode () {
+      if (!this.validFn()) {
+        return
+      }
+      if (!this.timer && this.second === this.totalSecond) {
+        await getMsgCode(this.picCode, this.picKey, this.mobile)
+        this.$toast('发送成功请注意查收')
+        this.timer = setInterval(() => {
+          this.second--
+          if (this.secod < 1) {
+            clearInterval(this.timer)
+            this.timer = null
+            this.second = this.totalSecond
+          }
+        }, 1000)
+      }
     }
 
+  },
+  destroyed () {
+    clearInterval(this.timer)
   }
 }
 </script>
