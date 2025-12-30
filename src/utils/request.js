@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Toast } from 'vant'
 
 const request = axios.create({
   baseURL: 'http://smart-shop.itheima.net/index.php?s=/api',
@@ -12,7 +13,12 @@ request.interceptors.request.use(function (config) {
 })
 // 添加响应拦截器
 request.interceptors.response.use(function (response) {
-  return response.data
+  const res = response.data
+  if (res.status !== 200) {
+    Toast(res.message)
+    return Promise.reject(res.message)
+  }
+  return res
 }, function (error) {
   return Promise.reject(error)
 })
