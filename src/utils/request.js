@@ -7,6 +7,12 @@ const request = axios.create({
 })
 // 添加请求拦截器
 request.interceptors.request.use(function (config) {
+  Toast.loading({
+    message: '请求中...',
+    forbidClick: true,
+    loadingType: 'spinner',
+    duration: 0
+  })
   return config
 }, function (error) {
   return Promise.reject(error)
@@ -17,6 +23,8 @@ request.interceptors.response.use(function (response) {
   if (res.status !== 200) {
     Toast(res.message)
     return Promise.reject(res.message)
+  } else {
+    Toast.clear()
   }
   return res
 }, function (error) {

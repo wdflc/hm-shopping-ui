@@ -65,6 +65,11 @@ export default {
       }
       const res = await codeLogin(this.mobile, this.msgCode)
       this.$store.commit('user/setUserInfo', res.data)
+      // 方式1：直接访问 state（可以，但不推荐）
+      // console.log(this.$store.state.user.userInfo?.token)
+      // 方式2：通过 getter（推荐）
+      console.log(this.$store.state.user.userInfo?.token)
+      console.log(this.$store.getters['user/token'])
       this.$router.push('/')
       this.$toast('登录成功')
     },
