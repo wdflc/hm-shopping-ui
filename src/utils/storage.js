@@ -1,5 +1,15 @@
 const INFO_KEY = 'hm_shopping_info'
+const HISTORY_KEY = 'hm_history_list'
 
+// 获取搜索历史
+export const getHistoryList = () => {
+  const result = localStorage.getItem(HISTORY_KEY)
+  return result ? JSON.parse(result) : []
+}
+
+export const setHistoryList = (arr) => {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(arr))
+}
 // 获取个人的信息
 export const getInfo = () => {
   const result = localStorage.getItem(INFO_KEY)

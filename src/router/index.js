@@ -28,18 +28,22 @@ const routes = [
     children: [
       {
         path: 'home',
+        name: 'Home',
         component: Home
       },
       {
         path: 'category',
+        name: 'Category',
         component: Category
       },
       {
         path: 'cart',
+        name: 'Cart',
         component: Cart
       },
       {
         path: 'user',
+        name: 'User',
         component: User
       }
     ]
@@ -53,7 +57,7 @@ const routes = [
     component: SearchList
   },
   {
-    path: '/proderail/:id',
+    path: '/prodetail/:id',
     component: ProDetail
   },
   {
